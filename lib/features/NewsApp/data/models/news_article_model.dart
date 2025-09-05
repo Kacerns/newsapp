@@ -5,30 +5,57 @@ part 'news_article_model.g.dart';
 
 @JsonSerializable()
 class NewsArticleModel extends NewsArticleEntity {
+  @JsonKey(defaultValue: 'Unknown Author')
+  final String modelAuthor;
+
+  @JsonKey(defaultValue: 'No Title Available')
+  final String modelTitle;
+
+  @JsonKey(defaultValue: 'No description provided')
+  final String modelDescription;
+
+  @JsonKey(defaultValue: '')
+  final String modelUrl;
+
+  @JsonKey(defaultValue: '')
+  final String modelUrlToImage;
+
+  @JsonKey(defaultValue: '')
+  final String modelPublishedAt;
+
+  @JsonKey(defaultValue: '')
+  final String modelContent;
+
   const NewsArticleModel({
-    required super.author,
-    required super.title,
-    required super.description,
-    required super.url,
-    required super.urlToImage,
-    required super.publishedAt,
-    required super.content,
-  });
+    required this.modelAuthor,
+    required this.modelTitle,
+    required this.modelDescription,
+    required this.modelUrl,
+    required this.modelUrlToImage,
+    required this.modelPublishedAt,
+    required this.modelContent,
+  }) : super(
+         author: modelAuthor,
+         title: modelTitle,
+         description: modelDescription,
+         url: modelUrl,
+         urlToImage: modelUrlToImage,
+         publishedAt: modelPublishedAt,
+         content: modelContent,
+       );
 
   factory NewsArticleModel.fromJson(Map<String, dynamic> json) =>
       _$NewsArticleModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$NewsArticleModelToJson(this);
 
-  // TODO: null safety, error handling.
-
   NewsArticleEntity toEntity() => NewsArticleEntity(
-    author: author,
-    title: title,
-    description: description,
-    url: url,
-    urlToImage: urlToImage,
-    publishedAt: publishedAt,
-    content: content,
+    author: modelAuthor,
+    title: modelTitle,
+    description: modelDescription,
+    url: modelUrl,
+    urlToImage: modelUrlToImage,
+    publishedAt: modelPublishedAt,
+    content: modelContent,
   );
 }

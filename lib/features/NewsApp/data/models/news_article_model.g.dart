@@ -8,22 +8,23 @@ part of 'news_article_model.dart';
 
 NewsArticleModel _$NewsArticleModelFromJson(Map<String, dynamic> json) =>
     NewsArticleModel(
-      author: json['author'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      url: json['url'] as String,
-      urlToImage: json['urlToImage'] as String,
-      publishedAt: json['publishedAt'] as String,
-      content: json['content'] as String,
+      modelAuthor: json['modelAuthor'] as String? ?? 'Unknown Author',
+      modelTitle: json['modelTitle'] as String? ?? 'No Title Available',
+      modelDescription:
+          json['modelDescription'] as String? ?? 'No description provided',
+      modelUrl: json['modelUrl'] as String? ?? '',
+      modelUrlToImage: json['modelUrlToImage'] as String? ?? '',
+      modelPublishedAt: json['modelPublishedAt'] as String? ?? '',
+      modelContent: json['modelContent'] as String? ?? '',
     );
 
 Map<String, dynamic> _$NewsArticleModelToJson(NewsArticleModel instance) =>
     <String, dynamic>{
-      'author': instance.author,
-      'title': instance.title,
-      'description': instance.description,
-      'url': instance.url,
-      'urlToImage': instance.urlToImage,
-      'publishedAt': instance.publishedAt,
-      'content': instance.content,
+      'modelAuthor': instance.modelAuthor,
+      'modelTitle': instance.modelTitle,
+      'modelDescription': instance.modelDescription,
+      'modelUrl': instance.modelUrl,
+      'modelUrlToImage': instance.modelUrlToImage,
+      'modelPublishedAt': instance.modelPublishedAt,
+      'modelContent': instance.modelContent,
     };
