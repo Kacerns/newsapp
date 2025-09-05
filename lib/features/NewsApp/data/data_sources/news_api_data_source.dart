@@ -17,7 +17,11 @@ class NewsDataSourceImpl implements NewsDataSource {
     String? category,
   }) async {
     try {
-      final queryParams = {'country': 'us', 'pageSize': 20};
+      final queryParams = {
+        'country': 'us',
+        'category': category,
+        'pageSize': 20,
+      };
 
       final response = await _dio.get(
         NewsAppConstants.baseUrl + NewsAppConstants.topHeadlinesEndpoint,
