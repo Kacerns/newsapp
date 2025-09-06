@@ -6,42 +6,42 @@ part 'news_article_model.g.dart';
 @JsonSerializable()
 class NewsArticleModel extends NewsArticleEntity {
   @JsonKey(defaultValue: 'Unknown Author')
-  final String modelAuthor;
+  final String author;
 
   @JsonKey(defaultValue: 'No Title Available')
-  final String modelTitle;
+  final String title;
 
   @JsonKey(defaultValue: 'No description provided')
-  final String modelDescription;
+  final String description;
 
   @JsonKey(defaultValue: '')
-  final String modelUrl;
+  final String url;
 
   @JsonKey(defaultValue: '')
-  final String modelUrlToImage;
+  final String urlToImage;
 
   @JsonKey(defaultValue: '')
-  final String modelPublishedAt;
+  final String publishedAt;
 
   @JsonKey(defaultValue: '')
-  final String modelContent;
+  final String content;
 
   const NewsArticleModel({
-    required this.modelAuthor,
-    required this.modelTitle,
-    required this.modelDescription,
-    required this.modelUrl,
-    required this.modelUrlToImage,
-    required this.modelPublishedAt,
-    required this.modelContent,
+    required this.author,
+    required this.title,
+    required this.description,
+    required this.url,
+    required this.urlToImage,
+    required this.publishedAt,
+    required this.content,
   }) : super(
-         author: modelAuthor,
-         title: modelTitle,
-         description: modelDescription,
-         url: modelUrl,
-         urlToImage: modelUrlToImage,
-         publishedAt: modelPublishedAt,
-         content: modelContent,
+         author: author,
+         title: title,
+         description: description,
+         url: url,
+         urlToImage: urlToImage,
+         publishedAt: publishedAt,
+         content: content,
        );
 
   factory NewsArticleModel.fromJson(Map<String, dynamic> json) =>
@@ -50,12 +50,12 @@ class NewsArticleModel extends NewsArticleEntity {
   Map<String, dynamic> toJson() => _$NewsArticleModelToJson(this);
 
   NewsArticleEntity toEntity() => NewsArticleEntity(
-    author: modelAuthor,
-    title: modelTitle,
-    description: modelDescription,
-    url: modelUrl,
-    urlToImage: modelUrlToImage,
-    publishedAt: modelPublishedAt,
-    content: modelContent,
+    author: author,
+    title: title,
+    description: description,
+    url: url,
+    urlToImage: urlToImage,
+    publishedAt: publishedAt,
+    content: content,
   );
 }
