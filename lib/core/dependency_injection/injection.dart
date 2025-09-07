@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:newsapp/core/services/url_service.dart';
 import 'package:newsapp/features/NewsApp/data/data_sources/news_api_data_source.dart';
 import 'package:newsapp/features/NewsApp/data/repository/news_article_repository_impl.dart';
 import 'package:newsapp/features/NewsApp/domain/repository/news_article_repository.dart';
@@ -24,4 +25,6 @@ setupDependencyInjection() {
   );
 
   getIt.registerFactory(() => NewsBloc(getIt()));
+
+  getIt.registerLazySingleton<UrlService>(() => UrlService());
 }
