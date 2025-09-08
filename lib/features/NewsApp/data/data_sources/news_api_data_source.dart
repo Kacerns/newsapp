@@ -4,7 +4,7 @@ import 'package:newsapp/core/constants/news_app_constants.dart';
 import 'package:newsapp/features/NewsApp/data/models/news_article_model.dart';
 
 abstract class NewsDataSource {
-  Future<List<NewsArticleModel>> getNewsArticlesFromSource({String? category});
+  Future<List<NewsArticleModel>> getNewsArticlesFromSource({int? page});
 }
 
 class NewsDataSourceImpl implements NewsDataSource {
@@ -13,15 +13,9 @@ class NewsDataSourceImpl implements NewsDataSource {
   NewsDataSourceImpl({required Dio dio}) : _dio = dio;
 
   @override
-  Future<List<NewsArticleModel>> getNewsArticlesFromSource({
-    String? category,
-  }) async {
+  Future<List<NewsArticleModel>> getNewsArticlesFromSource({int? page}) async {
     try {
-      final queryParams = {
-        'country': 'us',
-        'category': category,
-        'pageSize': 20,
-      };
+      final queryParams = {'country': 'us', 'pageSize': 20, 'page': page ?? 1};
 
       final response = await _dio.get(
         NewsAppConstants.baseUrl + NewsAppConstants.topHeadlinesEndpoint,

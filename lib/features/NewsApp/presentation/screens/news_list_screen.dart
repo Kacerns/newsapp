@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsapp/features/NewsApp/presentation/bloc/news_bloc.dart';
 import 'package:newsapp/features/NewsApp/presentation/bloc/news_event.dart';
@@ -24,12 +25,60 @@ class NewsListScreen extends StatelessWidget {
               onRefresh: () async {
                 context.read<NewsBloc>().add(OnLoadNews());
               },
-              child: ListView.builder(
-                itemCount: state.newsArticleEntityList.length,
-                itemBuilder: (context, index) {
-                  final newsArticleEntity = state.newsArticleEntityList[index];
-                  return ArticleCard(newsArticleEntity: newsArticleEntity);
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (scrollInfo) {
+                  if (scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.95) {
+                    if (!state.hasReachedMax && !state.nextPageLoad) {
+                      context.read<NewsBloc>().add(OnLoadMoreNews());
+                    }
+                  }
+                  return false;
                 },
+                child: ListView.builder(
+                  key: const PageStorageKey<String>('newsList'),
+                  itemCount: state.newsArticleEntityList.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index >= state.newsArticleEntityList.length) {
+                      if (state.nextPageLoad) {
+                        return Container(
+                          height: 150,
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else if (state.hasReachedMax) {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              action: SnackBarAction(
+                                label: 'Ok',
+                                onPressed: () {
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).hideCurrentSnackBar();
+                                },
+                              ),
+                              content: Text(
+                                'You have reached the end of the available articles',
+                              ),
+                              duration: Duration(milliseconds: 3000),
+                              margin: EdgeInsets.symmetric(horizontal: 16.0),
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          );
+                        });
+                      }
+                      return SizedBox.shrink();
+                    }
+                    final news = state.newsArticleEntityList[index];
+                    return ArticleCard(newsArticleEntity: news);
+                  },
+                ),
               ),
             );
           } else if (state is NewsArticleLoadError) {

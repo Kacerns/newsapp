@@ -6,9 +6,9 @@ class GetNewsArticlesUseCase {
 
   GetNewsArticlesUseCase({required this.newsArticleRepository});
 
-  Future<List<NewsArticleEntity>> execute({String? category}) {
+  Future<List<NewsArticleEntity>> execute({int? page}) {
     Future<List<NewsArticleEntity>> newsArticleEntityList =
-        newsArticleRepository.getNewsArticles(category: category);
+        newsArticleRepository.getNewsArticles(page: page ?? 1);
     return newsArticleEntityList;
   }
 }
