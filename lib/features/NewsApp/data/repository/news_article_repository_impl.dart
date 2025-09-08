@@ -10,10 +10,10 @@ class NewsArticleRepositoryImpl extends NewsArticleRepository {
   NewsArticleRepositoryImpl({required this.newsDataSource});
 
   @override
-  Future<List<NewsArticleEntity>> getNewsArticles({String? category}) async {
+  Future<List<NewsArticleEntity>> getNewsArticles({int? page}) async {
     try {
       final newsArticleModels = await newsDataSource.getNewsArticlesFromSource(
-        category: category,
+        page: page,
       );
       List<NewsArticleEntity> newsArticleEntityList = newsArticleModels
           .map((newsArticleModel) => newsArticleModel.toEntity())

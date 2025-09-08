@@ -10,15 +10,30 @@ abstract class NewsState extends Equatable {
 
 class NewsEmpty extends NewsState {}
 
-class NewsLoading extends NewsState {}
+class NewsLoading extends NewsState {
+  const NewsLoading();
+}
 
 class NewsLoaded extends NewsState {
   final List<NewsArticleEntity> newsArticleEntityList;
+  final int currentPage;
+  final bool hasReachedMax;
+  final bool nextPageLoad;
 
-  const NewsLoaded({required this.newsArticleEntityList});
+  const NewsLoaded({
+    required this.newsArticleEntityList,
+    this.currentPage = 1,
+    this.hasReachedMax = false,
+    this.nextPageLoad = false,
+  });
 
   @override
-  List<Object> get props => [newsArticleEntityList];
+  List<Object> get props => [
+    newsArticleEntityList,
+    currentPage,
+    hasReachedMax,
+    nextPageLoad,
+  ];
 }
 
 class NewsArticleLoadError extends NewsState {
