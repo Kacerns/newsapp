@@ -8,3 +8,8 @@ abstract class WebViewLoadingState extends Equatable {
 class WebViewLoading extends WebViewLoadingState {}
 
 class WebViewLoaded extends WebViewLoadingState {}
+
+class WebViewError extends WebViewLoadingState {
+  final String message;
+  WebViewError(this.message);
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsapp/core/errors/failure_errors.dart';
 import 'package:newsapp/features/NewsApp/presentation/screens/web_view_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class UrlService {
     try {
       await launchUrl(uri);
     } catch (e) {
-      print(e.toString());
+      throw ConnectionFailureError(e.toString());
     }
   }
 }

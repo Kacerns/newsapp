@@ -14,25 +14,26 @@ class NewsLoading extends NewsState {
   const NewsLoading();
 }
 
+//change the names here
 class NewsLoaded extends NewsState {
   final List<NewsArticleEntity> newsArticleEntityList;
   final int currentPage;
-  final bool hasReachedMax;
-  final bool nextPageLoad;
+  final bool isHasReachedMax;
+  final bool isNextPageLoading;
 
   const NewsLoaded({
     required this.newsArticleEntityList,
     this.currentPage = 1,
-    this.hasReachedMax = false,
-    this.nextPageLoad = false,
+    this.isHasReachedMax = false,
+    this.isNextPageLoading = false,
   });
 
   @override
   List<Object> get props => [
     newsArticleEntityList,
     currentPage,
-    hasReachedMax,
-    nextPageLoad,
+    isHasReachedMax,
+    isNextPageLoading,
   ];
 }
 

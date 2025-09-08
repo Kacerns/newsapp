@@ -9,29 +9,30 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   NewsBloc(this.getNewsArticlesUseCase) : super(NewsEmpty()) {
     on<OnLoadNews>((event, emit) async {
       emit(NewsLoading());
-      try {
-        final newsArticleEntityList = await getNewsArticlesUseCase.execute(
-          page: 1,
-        );
-        emit(
-          NewsLoaded(
-            newsArticleEntityList: newsArticleEntityList,
-            currentPage: 1,
-            hasReachedMax: false,
-          ),
-        );
-      } catch (e) {
-        emit(NewsArticleLoadError(message: e.toString()));
-      }
+      final newsArticleEntityList = await getNewsArticlesUseCase.execute(
+        page: 1,
+      );
+      newsArticleEntityList.fold(
+        (failureError) {
+          emit(NewsArticleLoadError(message: failureError.message));
+        },
+        (newsArticleEntityList) {
+          emit(
+            NewsLoaded(
+              newsArticleEntityList: newsArticleEntityList,
+              currentPage: 1,
+              isHasReachedMax: false,
+            ),
+          );
+        },
+      );
     });
 
     on<OnLoadMoreNews>((event, emit) async {
       final currentState = state;
-      if (currentState is! NewsLoaded) return;
-      if (currentState.hasReachedMax) {
-        return;
-      }
-      if (currentState.nextPageLoad) {
+      if (currentState is! NewsLoaded ||
+          currentState.isHasReachedMax ||
+          currentState.isNextPageLoading) {
         return;
       }
 
@@ -39,32 +40,35 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         NewsLoaded(
           newsArticleEntityList: currentState.newsArticleEntityList,
           currentPage: currentState.currentPage,
-          hasReachedMax: currentState.hasReachedMax,
-          nextPageLoad: true,
+          isHasReachedMax: currentState.isHasReachedMax,
+          isNextPageLoading: true,
         ),
       );
 
-      try {
-        final newArticles = await getNewsArticlesUseCase.execute(
-          page: currentState.currentPage + 1,
-        );
+      final newArticles = await getNewsArticlesUseCase.execute(
+        page: currentState.currentPage + 1,
+      );
 
-        final updatedArticles = List.of(currentState.newsArticleEntityList)
-          ..addAll(newArticles);
+      newArticles.fold(
+        (failureError) {
+          emit(NewsArticleLoadError(message: failureError.message));
+        },
+        (newsArticleEntityList) {
+          final updatedArticles = List.of(currentState.newsArticleEntityList)
+            ..addAll(newsArticleEntityList);
 
-        bool hasReachedMax = newArticles.isEmpty;
+          bool isHasReachedMax = newsArticleEntityList.isEmpty;
 
-        emit(
-          NewsLoaded(
-            newsArticleEntityList: updatedArticles,
-            currentPage: currentState.currentPage + 1,
-            hasReachedMax: hasReachedMax,
-            nextPageLoad: false,
-          ),
-        );
-      } catch (e) {
-        emit(NewsArticleLoadError(message: e.toString()));
-      }
+          emit(
+            NewsLoaded(
+              newsArticleEntityList: updatedArticles,
+              currentPage: currentState.currentPage + 1,
+              isHasReachedMax: isHasReachedMax,
+              isNextPageLoading: false,
+            ),
+          );
+        },
+      );
     });
   }
 }
