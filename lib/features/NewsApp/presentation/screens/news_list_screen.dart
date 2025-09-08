@@ -44,8 +44,10 @@ class NewsListScreen extends StatelessWidget {
                         return Container(
                           height: 150,
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Center(child: CircularProgressIndicator()),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         );
                       } else if (state.isHasReachedMax) {
                         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -62,9 +64,13 @@ class NewsListScreen extends StatelessWidget {
                               content: Text(
                                 'You have reached the end of the available articles',
                               ),
-                              duration: Duration(milliseconds: 3000),
-                              margin: EdgeInsets.symmetric(horizontal: 16.0),
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              duration: const Duration(milliseconds: 3000),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0,
+                              ),
                               behavior: SnackBarBehavior.floating,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),

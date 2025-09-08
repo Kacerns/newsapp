@@ -62,12 +62,12 @@ class WebViewContent extends StatelessWidget {
           } else if (state is WebViewError) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.error_outline, size: 48),
-                SizedBox(height: 12),
+                const Icon(Icons.error_outline, size: 48),
+                const SizedBox(height: 12),
                 Text('Oops! ${state.message}', textAlign: TextAlign.center),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     context.read<WebViewLoadingBloc>().add(
@@ -75,7 +75,7 @@ class WebViewContent extends StatelessWidget {
                     );
                     webViewController.loadRequest(Uri.parse(url));
                   },
-                  child: Text('Retry'),
+                  child: const Text('Retry'),
                 ),
               ],
             );
