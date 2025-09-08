@@ -29,7 +29,7 @@ class NewsListScreen extends StatelessWidget {
                 onNotification: (scrollInfo) {
                   if (scrollInfo.metrics.pixels >=
                       scrollInfo.metrics.maxScrollExtent * 0.95) {
-                    if (!state.hasReachedMax && !state.nextPageLoad) {
+                    if (!state.isHasReachedMax && !state.isNextPageLoading) {
                       context.read<NewsBloc>().add(OnLoadMoreNews());
                     }
                   }
@@ -40,14 +40,14 @@ class NewsListScreen extends StatelessWidget {
                   itemCount: state.newsArticleEntityList.length + 1,
                   itemBuilder: (context, index) {
                     if (index >= state.newsArticleEntityList.length) {
-                      if (state.nextPageLoad) {
+                      if (state.isNextPageLoading) {
                         return Container(
                           height: 150,
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Center(child: CircularProgressIndicator()),
                         );
-                      } else if (state.hasReachedMax) {
+                      } else if (state.isHasReachedMax) {
                         SchedulerBinding.instance.addPostFrameCallback((_) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

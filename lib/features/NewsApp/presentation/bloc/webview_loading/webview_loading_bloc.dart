@@ -12,5 +12,9 @@ class WebViewLoadingBloc
     on<WebViewFinishedLoading>((event, emit) {
       emit(WebViewLoaded());
     });
+
+    on<WebViewErrorOccurred>((event, emit) {
+      emit(WebViewError(event.errorDescription));
+    });
   }
 }

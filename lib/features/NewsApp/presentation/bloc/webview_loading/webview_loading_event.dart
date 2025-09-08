@@ -8,3 +8,8 @@ abstract class WebViewLoadingEvent extends Equatable {
 class WebViewStartedLoading extends WebViewLoadingEvent {}
 
 class WebViewFinishedLoading extends WebViewLoadingEvent {}
+
+class WebViewErrorOccurred extends WebViewLoadingEvent {
+  final String errorDescription;
+  WebViewErrorOccurred(this.errorDescription);
+}

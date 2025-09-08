@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:newsapp/core/errors/server_exception.dart';
+import 'package:newsapp/core/errors/exception_errors.dart';
 import 'package:newsapp/core/constants/news_app_constants.dart';
 import 'package:newsapp/features/NewsApp/data/models/news_article_model.dart';
 
@@ -25,18 +25,35 @@ class NewsDataSourceImpl implements NewsDataSource {
 
       if (response.statusCode == 200) {
         final data = response.data as Map<String, dynamic>;
-        final articlesJsonList = data['articles'] as List;
+        if (data['articles'] == null || data['articles'] is! List) {
+          throw ParsingException(message: "Invalid response format");
+        }
 
-        final List<NewsArticleModel> newsArticleModelList = articlesJsonList
+        final articlesJsonList = data['articles'] as List;
+        return articlesJsonList
             .map((json) => NewsArticleModel.fromJson(json))
             .toList();
-
-        return newsArticleModelList;
       } else {
-        throw ServerException(message: "Error: ${response.statusCode}");
+        throw ServerException(
+          message: "Request failed with status: ${response.statusCode}",
+        );
       }
+    } on DioException catch (dioError) {
+      if (dioError.type == DioExceptionType.connectionTimeout ||
+          dioError.type == DioExceptionType.receiveTimeout) {
+        throw NetworkException(message: "Connection timed out");
+      } else if (dioError.type == DioExceptionType.badResponse) {
+        throw ServerException(
+          message:
+              "Server error: ${dioError.response?.statusCode ?? 'unknown'}",
+        );
+      } else {
+        throw NetworkException(message: "Network error: ${dioError.message}");
+      }
+    } on FormatException catch (e) {
+      throw ParsingException(message: "Data format error: ${e.message}");
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw UnknownException(message: e.toString());
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:newsapp/core/errors/failure_errors.dart';
 import 'package:newsapp/features/NewsApp/domain/entities/news_article_entity.dart';
 import 'package:newsapp/features/NewsApp/domain/repository/news_article_repository.dart';
 
@@ -6,9 +8,7 @@ class GetNewsArticlesUseCase {
 
   GetNewsArticlesUseCase({required this.newsArticleRepository});
 
-  Future<List<NewsArticleEntity>> execute({int? page}) {
-    Future<List<NewsArticleEntity>> newsArticleEntityList =
-        newsArticleRepository.getNewsArticles(page: page ?? 1);
-    return newsArticleEntityList;
+  Future<Either<FailureError, List<NewsArticleEntity>>> execute({int? page}) {
+    return newsArticleRepository.getNewsArticles(page: page ?? 1);
   }
 }

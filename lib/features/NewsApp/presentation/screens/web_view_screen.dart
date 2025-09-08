@@ -38,7 +38,11 @@ class WebViewContent extends StatelessWidget {
           onPageFinished: (String url) {
             context.read<WebViewLoadingBloc>().add(WebViewFinishedLoading());
           },
-          onWebResourceError: (WebResourceError error) {},
+          onWebResourceError: (WebResourceError error) {
+            context.read<WebViewLoadingBloc>().add(
+              WebViewErrorOccurred(error.description),
+            );
+          },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
               return NavigationDecision.prevent;
@@ -53,13 +57,30 @@ class WebViewContent extends StatelessWidget {
       appBar: AppBar(title: Text(Uri.parse(url).host)),
       body: BlocBuilder<WebViewLoadingBloc, WebViewLoadingState>(
         builder: (context, state) {
-          return Stack(
-            children: [
-              WebViewWidget(controller: webViewController),
-              if (state is WebViewLoading)
-                const Center(child: CircularProgressIndicator()),
-            ],
-          );
+          if (state is WebViewLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is WebViewError) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48),
+                SizedBox(height: 12),
+                Text('Oops! ${state.message}', textAlign: TextAlign.center),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<WebViewLoadingBloc>().add(
+                      WebViewStartedLoading(),
+                    );
+                    webViewController.loadRequest(Uri.parse(url));
+                  },
+                  child: Text('Retry'),
+                ),
+              ],
+            );
+          }
+          return WebViewWidget(controller: webViewController);
         },
       ),
     );
