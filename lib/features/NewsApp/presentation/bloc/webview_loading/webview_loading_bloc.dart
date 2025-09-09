@@ -14,7 +14,9 @@ class WebViewLoadingBloc
     });
 
     on<WebViewErrorOccurred>((event, emit) {
-      emit(WebViewError(event.errorDescription));
+      if (event.errorDescription != 'ERR_BLOCKED_BY_ORB') {
+        emit(WebViewError(event.errorDescription));
+      }
     });
   }
 }

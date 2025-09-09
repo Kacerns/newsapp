@@ -10,8 +10,6 @@ class OpenUrlDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final urlService = getIt<UrlService>();
-
     return AlertDialog(
       title: Text('Open URL'),
       content: Text('How would you like to open this URL?'),
@@ -19,35 +17,13 @@ class OpenUrlDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
-            urlService.openInWebView(context, url);
+            openWebview(context, url);
           },
           child: Text('WebView'),
         ),
         TextButton(
           onPressed: () {
-            try {
-              Navigator.of(context).pop();
-              urlService.openInBrowser(url);
-            } on UnknownException catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  action: SnackBarAction(
-                    label: 'Ok',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                  ),
-                  content: Text('Unexpected error: {$e.toString()}'),
-                  duration: Duration(milliseconds: 3000),
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              );
-            }
+            openUrl(context, url);
           },
           child: Text('Browser'),
         ),
@@ -60,5 +36,36 @@ class OpenUrlDialog extends StatelessWidget {
       context: context,
       builder: (context) => OpenUrlDialog(url: url),
     );
+  }
+
+  static Future<void> openWebview(BuildContext context, String url) async {
+    final urlService = getIt<UrlService>();
+    return urlService.openInWebView(context, url);
+  }
+
+  static Future<void> openUrl(BuildContext context, String url) async {
+    final urlService = getIt<UrlService>();
+    try {
+      return urlService.openInBrowser(url);
+    } on UnknownException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          action: SnackBarAction(
+            label: 'Ok',
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+          content: Text('Unexpected error: {$e.toString()}'),
+          duration: Duration(milliseconds: 3000),
+          margin: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      );
+    }
   }
 }
