@@ -18,8 +18,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [BlocProvider<NewsBloc>(create: (_) => getIt<NewsBloc>())],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'News App',
         theme: NewsAppTheme.lightTheme,
+        darkTheme: NewsAppTheme.darkTheme,
         home: NewsListScreen(),
       ),
     );
